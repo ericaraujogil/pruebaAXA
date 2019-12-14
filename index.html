@@ -38,7 +38,7 @@
         </div>
     </nav>
 
-    <div class="card-columns">
+    <div id="card-container" class="card-columns">
         <div class="card">
             <img src="./img/gnome1.jpeg" class="card-img-top" alt="...">
             <div class="card-body">
@@ -80,14 +80,29 @@
     <script>
         //temporary variable used to store the data retrieved from the server
         var gnomes = [];
+        const container = document.getElementById("card-container");
         //function called to retrieve the data from the server and work with it
         function retrieveData() {
             $.getJSON('https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json', function(data) {
                 //data is the JSON string
                 gnomes = $.each(data, function(index, element) {})
+
                 console.log(gnomes)
                 for (let gnome in gnomes.Brastlewark) {
+                    const card = document.createElement("div");
+                    card.classList = "card";
+                    const content = `
+                    <div class="card">
+                        <img src=${gnomes.Brastlewark[gnome].thumbnail} alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">${gnomes.Brastlewark[gnome].name}</h5>
+                            <p class="card-text">${gnomes.Brastlewark[gnome].weight}</p>
+                        </div>
+                    </div>
+                    `
                     console.log(gnomes.Brastlewark[gnome])
+                    container.innerHTML += content;
+                    break;
                 }
 
             });
