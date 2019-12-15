@@ -8,7 +8,13 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
+    <style>
+        .card-img-top {
+            width: 100%;
+            height: 15vw;
+            object-fit: cover;
+        }
+    </style>
     <title>Hello, world!</title>
 </head>
 
@@ -39,34 +45,7 @@
     </nav>
 
     <div id="card-container" class="card-columns">
-        <div class="card">
-            <img src="./img/gnome1.jpeg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title that wraps to a new line</h5>
-                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="./img/gnome2.jpeg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="./img/gnome3.jpeg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title that wraps to a new line</h5>
-                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            </div>
-        </div>
-        <div class="card">
-            <img src="./img/gnome4.jpeg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-            </div>
-        </div>
+
     </div>
 
     <button class="btn btn-primary" onclick="retrieveData()"> Petición Ajax</button>
@@ -89,23 +68,38 @@
 
                 console.log(gnomes)
                 for (let gnome in gnomes.Brastlewark) {
-                    const card = document.createElement("div");
-                    card.classList = "card";
-                    const content = `
-                    <div class="card">
-                        <img src=${gnomes.Brastlewark[gnome].thumbnail} alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">${gnomes.Brastlewark[gnome].name}</h5>
-                            <p class="card-text">${gnomes.Brastlewark[gnome].weight}</p>
+                    if (checkProfession("Metalworker", gnomes.Brastlewark[gnome])) {
+                        const card = document.createElement("div");
+                        card.classList = "card";
+                        const content = `
+                        <div class="card">
+                            <img class="card-img-top" src=${gnomes.Brastlewark[gnome].thumbnail} alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">Name: ${gnomes.Brastlewark[gnome].name}</h5>
+                                <p class="card-text">Age: ${gnomes.Brastlewark[gnome].age}</p>
+                                <p class="card-text">Weight: ${gnomes.Brastlewark[gnome].weight}</p>
+                                <p class="card-text">Height: ${gnomes.Brastlewark[gnome].height}</p>
+                                <p class="card-text">Hair Color: ${gnomes.Brastlewark[gnome].hair_color}</p>
+                            </div>
                         </div>
-                    </div>
-                    `
-                    console.log(gnomes.Brastlewark[gnome])
-                    container.innerHTML += content;
-                    break;
+                        `
+                        container.innerHTML += content;
+                        console.log(gnomes.Brastlewark[gnome])
+
+                    }
+
+                    //break;
+
                 }
 
             });
+        }
+
+        function checkProfession(profession, gnome) {
+            if (gnome.professions.includes(profession)) {
+                console.log(`el gnomo es ${profession}`)
+                return true
+            }
         }
     </script>
 </body>
