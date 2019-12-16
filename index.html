@@ -11,8 +11,7 @@
     <style>
         .card-img-top {
             width: 100%;
-            height: 15vw;
-            object-fit: cover;
+            height: 20vw;
         }
     </style>
     <title>Hello, world!</title>
@@ -38,8 +37,8 @@
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                <input id="filter" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="filterName()">Search</button>
             </form>
         </div>
     </nav>
@@ -48,7 +47,8 @@
 
     </div>
 
-    <button class="btn btn-primary" onclick="retrieveData()"> Petición Ajax</button>
+
+    <button class="btn btn-primary" onclick="retrieveData()"> Petición Ajax </button>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -58,49 +58,67 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
         //temporary variable used to store the data retrieved from the server
-        var gnomes = [];
         const container = document.getElementById("card-container");
+        var gnomes;
+        //when the page is ready retrieve data from the server
+        $(document).ready(retrieveData())
+
         //function called to retrieve the data from the server and work with it
         function retrieveData() {
             $.getJSON('https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json', function(data) {
                 //data is the JSON string
                 gnomes = $.each(data, function(index, element) {})
-
+                let gnomesstring = JSON.stringify(gnomes);
+                localStorage.setItem('gnomes', gnomesstring)
                 console.log(gnomes)
-                for (let gnome in gnomes.Brastlewark) {
-                    if (checkProfession("Metalworker", gnomes.Brastlewark[gnome])) {
-                        const card = document.createElement("div");
-                        card.classList = "card";
-                        const content = `
-                        <div class="card">
-                            <img class="card-img-top" src=${gnomes.Brastlewark[gnome].thumbnail} alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">Name: ${gnomes.Brastlewark[gnome].name}</h5>
-                                <p class="card-text">Age: ${gnomes.Brastlewark[gnome].age}</p>
-                                <p class="card-text">Weight: ${gnomes.Brastlewark[gnome].weight}</p>
-                                <p class="card-text">Height: ${gnomes.Brastlewark[gnome].height}</p>
-                                <p class="card-text">Hair Color: ${gnomes.Brastlewark[gnome].hair_color}</p>
-                            </div>
-                        </div>
-                        `
-                        container.innerHTML += content;
-                        console.log(gnomes.Brastlewark[gnome])
-
-                    }
-
-                    //break;
-
-                }
-
             });
         }
 
-        function checkProfession(profession, gnome) {
-            if (gnome.professions.includes(profession)) {
-                console.log(`el gnomo es ${profession}`)
-                return true
+
+        // filter gnomes using a string retrieved from the search input
+        function filterName() {
+            event.preventDefault()
+            gnomes = localStorage.getItem("gnomes");
+            gnomes = JSON.parse(gnomes)
+            console.log(gnomes)
+            for (let gnome in gnomes.Brastlewark) {
+                if (gnomes.Brastlewark[gnome].name.includes(document.getElementById("filter").value)) {
+                    createCard(gnomes.Brastlewark[gnome])
+                        //console.log(gnomes.Brastlewark[gnome])
+                } else if (gnomes.Brastlewark[gnome].professions.includes(document.getElementById("filter").value)) {
+                    createCard(gnomes.Brastlewark[gnome])
+                    console.log(gnomes.Brastlewark[gnome].professions)
+                } else if (document.getElementById("filter").value == "") {
+                    createCard(gnomes.Brastlewark[gnome0])
+                }
             }
+
+            console.log(gnomes.Brastlewark)
         }
+
+        // create a card with the gnome info
+        function createCard(gnome) {
+            const card = document.createElement("div");
+            card.classList = "card";
+            const content = `
+                                    <div class="card">
+                                        <img class="card-img-top" src=${gnome.thumbnail} alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Name: ${gnome.name}</h5>
+                                            <p class="card-text">Age: ${gnome.age}</p>
+                                            <p class="card-text">Weight: ${gnome.weight}</p>
+                                            <p class="card-text">Height: ${gnome.height}</p>
+                                            <p class="card-text">Hair Color: ${gnome.hair_color}</p>
+                                        </div>
+                                    </div>
+                                    `
+            container.innerHTML += content;
+        }
+
+        // clear local storage when the browser is closed
+        window.addEventListener("beforeunload", function(e) {
+            localStorage.clear()
+        }, false);
     </script>
 </body>
 
