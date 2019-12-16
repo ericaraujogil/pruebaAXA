@@ -47,8 +47,8 @@
 
     </div>
 
-
-    <button class="btn btn-primary" onclick="retrieveData()"> Petición Ajax </button>
+    <div id="gnomeinfo" class="d-none">
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -59,10 +59,9 @@
     <script>
         //temporary variable used to store the data retrieved from the server
         const container = document.getElementById("card-container");
-        var gnomes;
         //when the page is ready retrieve data from the server
         $(document).ready(retrieveData())
-
+        var gnomes;
         //function called to retrieve the data from the server and work with it
         function retrieveData() {
             $.getJSON('https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json', function(data) {
@@ -109,12 +108,36 @@
                                             <p class="card-text">Weight: ${gnome.weight}</p>
                                             <p class="card-text">Height: ${gnome.height}</p>
                                             <p class="card-text">Hair Color: ${gnome.hair_color}</p>
+                                            <button class="btn btn-primary" onclick="showGnomeInfo(${gnome.id})"> Gnome info </button>
                                         </div>
                                     </div>
                                     `
             container.innerHTML += content;
         }
 
+        function showGnomeInfo(id) {
+            document.getElementById("card-container").classList.add("d-none");
+            document.getElementById("gnomeinfo").classList.remove("d-none");
+            let containerinfo = document.getElementById("gnomeinfo");
+            gnomes = localStorage.getItem("gnomes");
+            gnomes = JSON.parse(gnomes)
+            console.log(gnomes)
+            const info = ` 
+                <h5 class="card-title">Name: ${gnomes.Brastlewark[id].name}</h5>
+                <p class="card-text">Age: ${gnomes.Brastlewark[id].age}</p>
+                <p class="card-text">Weight: ${gnomes.Brastlewark[id].weight}</p>
+                <p class="card-text">Height: ${gnomes.Brastlewark[id].height}</p>
+                <p class="card-text">Hair Color: ${gnomes.Brastlewark[id].hair_color}</p>
+                <button class="btn btn-danger" onclick="goBack()"> Back </button>
+            `
+            $(containerinfo).empty()
+            containerinfo.innerHTML += info;
+        }
+
+        function goBack() {
+            document.getElementById("gnomeinfo").classList.add("d-none");
+            document.getElementById("card-container").classList.remove("d-none");
+        }
         // clear local storage when the browser is closed
         window.addEventListener("beforeunload", function(e) {
             localStorage.clear()
