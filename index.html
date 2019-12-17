@@ -38,7 +38,7 @@
             </ul>
             <form class="form-inline my-2 my-lg-0">
                 <input id="filter" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="filterName()">Search</button>
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="filterName2()">Search</button>
             </form>
         </div>
     </nav>
@@ -46,6 +46,9 @@
     <div id="card-container" class="card-columns">
 
     </div>
+
+    <button class="btn btn-primary" onclick="showGnomeInfo(${gnome.id})"> Gnome info </button>
+
 
     <div id="gnomeinfo" class="d-none">
     </div>
@@ -62,6 +65,7 @@
         //when the page is ready retrieve data from the server
         $(document).ready(retrieveData())
         var gnomes;
+        var gnomeindex = 0;
         //function called to retrieve the data from the server and work with it
         function retrieveData() {
             $.getJSON('https://raw.githubusercontent.com/rrafols/mobile_test/master/data.json', function(data) {
@@ -79,7 +83,7 @@
             event.preventDefault()
             gnomes = localStorage.getItem("gnomes");
             gnomes = JSON.parse(gnomes)
-            console.log(gnomes)
+            container.innerHTML = " "
             for (let gnome in gnomes.Brastlewark) {
                 if (gnomes.Brastlewark[gnome].name.includes(document.getElementById("filter").value)) {
                     createCard(gnomes.Brastlewark[gnome])
@@ -88,11 +92,32 @@
                     createCard(gnomes.Brastlewark[gnome])
                     console.log(gnomes.Brastlewark[gnome].professions)
                 } else if (document.getElementById("filter").value == "") {
-                    createCard(gnomes.Brastlewark[gnome0])
+                    createCard(gnomes.Brastlewark[gnome])
                 }
             }
+        }
 
-            console.log(gnomes.Brastlewark)
+        function filterName2() {
+            event.preventDefault()
+            gnomes = localStorage.getItem("gnomes");
+            gnomes = JSON.parse(gnomes)
+            container.innerHTML = " "
+            if (gnomeindex < gnomes.Brastlewark.length - 1) {
+                console.log(gnomeindex)
+                for (let i = gnomeindex; i < Math.round(gnomeindex + gnomes.Brastlewark.length / 4); i++) {
+                    if (gnomes.Brastlewark[i].name.includes(document.getElementById("filter").value) || gnomes.Brastlewark[i].professions.includes(document.getElementById("filter").value)) {
+                        createCard(gnomes.Brastlewark[i])
+                        console.log(gnomes.Brastlewark[i])
+                    } else if (document.getElementById("filter").value == "") {
+                        createCard(gnomes.Brastlewark[i])
+                    }
+                }
+                gnomeindex += Math.round(gnomes.Brastlewark.length / 4);
+            } else {
+                gnomeindex = 0;
+            }
+
+            console.log(gnomeindex)
         }
 
         // create a card with the gnome info
@@ -123,6 +148,7 @@
             gnomes = JSON.parse(gnomes)
             console.log(gnomes)
             const info = ` 
+                <img class="card-img-top" src=${gnomes.Brastlewark[id].thumbnail} alt="...">
                 <h5 class="card-title">Name: ${gnomes.Brastlewark[id].name}</h5>
                 <p class="card-text">Age: ${gnomes.Brastlewark[id].age}</p>
                 <p class="card-text">Weight: ${gnomes.Brastlewark[id].weight}</p>
