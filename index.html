@@ -13,41 +13,33 @@
             width: 100%;
             height: 20vw;
         }
+        
+        #viewmore {
+            position: sticky;
+            bottom: 0;
+        }
     </style>
     <title>Hello, world!</title>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+        <a class="navbar-brand" href="#">
+            <img src="./img/logo.png" width="50" height="50" alt="">
+        </a>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input id="filter" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="filterName2()">Search</button>
-            </form>
-        </div>
+        <form class="form-inline my-2 my-lg-0">
+            <input id="filter" class="form-control mr-sm-2" type="search" placeholder="Looking for a gnome...?" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="filterName2()">Search</button>
+        </form>
     </nav>
 
     <div id="card-container" class="card-columns">
 
     </div>
 
-    <button class="btn btn-primary" onclick="showGnomeInfo(${gnome.id})"> Gnome info </button>
+
+    <button id="viewmore" class="btn btn-primary btn-lg btn-block d-none" onclick="filterName2()"> View more </button>
 
 
     <div id="gnomeinfo" class="d-none">
@@ -113,8 +105,15 @@
                     }
                 }
                 gnomeindex += Math.round(gnomes.Brastlewark.length / 4);
+                if (document.getElementById("viewmore").classList.contains("d-none")) {
+                    document.getElementById("viewmore").classList.remove("d-none");
+                }
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'fast');
             } else {
                 gnomeindex = 0;
+                document.getElementById("viewmore").classList.add("d-none");
             }
 
             console.log(gnomeindex)
